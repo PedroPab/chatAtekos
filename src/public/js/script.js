@@ -11,13 +11,13 @@ sendMesage.addEventListener('click', () => {
 //recibimos un mensage nuevo
 socket.on('message', data => {
   console.log(`new message`);
-  const { user, message, time } = data
+  const { user, message, time, img } = data
 
   const msg = document.createRange().createContextualFragment(
     /*html*/`
      <div class="message">
        <div class="imgContainer">
-         <img src="img/michiConSombreroDeBaquero.jpeg" alt="Foto de perfil">
+         <img src="img/${img}" alt="Foto de perfil">
        </div>
        <div class="messageBody">
          <div class="userInfo">

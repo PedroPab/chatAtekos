@@ -100,3 +100,40 @@ main {
 .buttonMesage:hover {
   background-color: #4cae4c;
 }
+
+.containerIms {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.listImgs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.imgLabel {
+  display: block;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  transition: border 0.3s ease;
+}
+
+.imgRadio {
+  display: none;
+}
+
+.imgLabel img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+/* Estilo cuando la imagen está seleccionada */
+.imgRadio:checked + img {
+  border-color: #5cb85c; /* Color de borde para imagen seleccionada */
+  border-width: 2px;
+}

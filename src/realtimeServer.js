@@ -7,13 +7,23 @@ const server = (httpServer) => {
   io.on('connection', socket => {
 
     socket.on('message', (data) => {
-      const cookie = socket.handshake.headers.cookie
-      const user = cookie.split('=').pop()
+      //organisamos las cookies
+      const cookieString = socket.handshake.headers.cookie
+      const cookiesList = cookieString.split('; ');
+      const cookies = {}
+      cookiesList.forEach(elment => {
+        const keyValue = elment.split('=')
+        cookies[keyValue[0]] = keyValue[1]
+      })
+
+      const user = cookies.userName
+      const userImg = cookies.userImg
       //enviamos el mensage a todo los conectados
       io.emit('message', {
         user: user,
         message: data.message,
-        time: new Date().toLocaleTimeString()
+        time: new Date().toLocaleTimeString(),
+        img: userImg,
       })
     })
 

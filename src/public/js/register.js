@@ -1,19 +1,40 @@
+//lista de las fotos que tenemos disponibles 
+const listImgs = imgsList()
+  .then(data => {
+    //mostramso en el contendeor las images disponibles
+    const listImgs = document.getElementById('listImgs')
+    let rta = ''
+    data.forEach((element, i) => {
+      rta = rta + /*html */`
+      <div>
+        <label class="imgLabel">
+          <input type="radio" name="selectedImage" value="${element}" class="imgRadio">
+           <img src="/img/${element}" alt="foto de usuario">
+        </label>
+      </div>
+
+      `
+    });
+
+    const content = document.createRange().createContextualFragment(rta)
+    listImgs.append(content)
+
+
+  })
+
 const buttonRegister = document.getElementById('buttonLogin')
 const userName = document.getElementById('userName')
 
 buttonRegister.addEventListener('click', () => {
   if (userName.value !== '') {
+    //la foto de usruario selecinado 
+    let imgUser = getSelectedImageValue();
+    console.log("🚀 ~ file: register.js:32 ~ buttonRegister.addEventListener ~ imgUser:", imgUser)
+    if (!imgUser) imgUser = 'default.png'
+
     document.cookie = `userName=${userName.value}`
+    document.cookie = `userImg=${imgUser}`
 
-    //madar imagen asciada con el nombre de usuario
-    // mandarImagenUser(userName.value)
-    //   .then((data) => {
-
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-
-    //   })
     document.location.href = '/'
     return
   }
@@ -23,30 +44,25 @@ buttonRegister.addEventListener('click', () => {
 
 })
 
-function mandarImagenUser(userName) {
-  new Promise((resolve, reject) => {
-    const imageUser = document.getElementById('imageUser');
-    const formData = new FormData();
-    // Añade la imagen seleccionada al formulario
-    if (imageUser.files.length > 0) {
-      formData.append('image', imageUser.files[0]);
-    }
-    console.log("🚀 ~ file: register.js:23 ~ newPromise ~ formData:", formData)
 
-    // Realiza la solicitud al servidor
-    fetch('/imgUser', {
-      method: 'POST',
-      body: formData
-    })
-      .then(response => response.json())
-      .then(data => {
-        resolve('todo melo')
-        alert('Imagen subida con éxito: ' + JSON.stringify(data));
+function imgsList() {
+  return new Promise((resolve, reject) => {
+    fetch("/imgs")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('No se pudo obtener la respuesta exitosa');
+        }
+        // Parsear la respuesta JSON en un arreglo
+        return response.json();
       })
-      .catch(error => {
-        reject(error)
-        console.error('Error al subir la imagen:', error);
-      });
+      .then(data => {
+        resolve(data)
+      })
+      .catch(error => reject([]))
   })
+}
 
+function getSelectedImageValue() {
+  const radios = document.querySelectorAll('input[name="selectedImage"]:checked');
+  return radios.length > 0 ? radios[0].value : null;
 }
